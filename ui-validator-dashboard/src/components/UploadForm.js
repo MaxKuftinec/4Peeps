@@ -29,10 +29,10 @@ const UploadForm = () => {
                         <p>How would you like to provide the Figma design?</p>
                         <div className="select-button">
                             <button onClick={() => setFigmaOption("url")} className="option-button">
-                                <FaLink /> Use Figma URL
+                                <FaLink className="icon_logo" /> Use Figma URL
                             </button>
                             <button onClick={() => setFigmaOption("file")} className="option-button">
-                                <FaFileAlt /> Upload Figma File
+                                <FaFileAlt className="icon_logo" /> Upload Figma File
                             </button>
                         </div>
                     </div>
@@ -41,10 +41,10 @@ const UploadForm = () => {
                         <p>How would you like to provide the Website design?</p>
                         <div className="select-button">
                             <button onClick={() => setWebsiteOption("url")} className="option-button">
-                                <FaGlobe /> Use Website URL
+                                <FaGlobe className="icon_logo" /> Use Website URL
                             </button>
                             <button onClick={() => setWebsiteOption("file")} className="option-button">
-                                <FaFileAlt /> Upload Website Screenshot
+                                <FaFileAlt className="icon_logo" /> Upload Website Screenshot
                             </button>
                         </div>
                     </div>
