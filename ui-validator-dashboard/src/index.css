@@ -103,6 +103,23 @@ code {
   cursor: pointer;
 }
 
+.input-group input[type="file"]::file-selector-button {
+  background: linear-gradient(99.78deg, #F76443 25.89%, #FEC746 109.55%);
+  color: white;
+  font-family: inherit;
+  border: none;
+  padding: 10px 15px;
+  font-weight: bold;
+  cursor: pointer;
+  border-radius: 6px;
+  transition: background 0.3s ease-in-out;
+}
+
+/* Hover effect */
+.input-group input[type="file"]::file-selector-button:hover {
+  background: linear-gradient(99.78deg, #e76042 25.89%, #b89032 109.55%);
+}
+
 /* Button Styling */
 .compare-button {
   width: 100%;
@@ -110,6 +127,7 @@ code {
   color: white;
   font-size: 17px;
   font-weight: bold;
+  font-family: inherit;
   padding: 12px;
   border: none;
   border-radius: 8px;

@@ -10,40 +10,40 @@ const UploadForm = () => {
     const [websiteUrl, setWebsiteUrl] = useState("");
     const [websiteFile, setWebsiteFile] = useState(null);
     const [matchPercentage, setMatchPercentage] = useState(null);
-		const [loading, setLoading] = useState(false); // <-- Add this line
+    const [loading, setLoading] = useState(false); // <-- Add this line
 
     const handleCompare = async (e) => {
         e.preventDefault();
 
-				if (!figmaFile || !websiteFile) {
-					alert("Please upload both images before comparing.");
-					return;
-				}
+        if (!figmaFile || !websiteFile) {
+            alert("Please upload both images before comparing.");
+            return;
+        }
 
-				setLoading(true);
+        setLoading(true);
 
-				const formData = new FormData();
-    		formData.append("figma_file", figmaFile);  // Assuming `figmaFile` is stored in state
-    		formData.append("ui_file", websiteFile);   // Assuming `uiFile` is stored in state
+        const formData = new FormData();
+        formData.append("figma_file", figmaFile);  // Assuming `figmaFile` is stored in state
+        formData.append("ui_file", websiteFile);   // Assuming `uiFile` is stored in state
 
         try {
-					const response = await axios.post("http://127.0.0.1:8000/compare-ui", formData, {
-							headers: { "Content-Type": "multipart/form-data" }
-					});
-	
-					console.log("Comparison Report:", response.data.report);
-					alert("Comparison completed! Check console for results.");
-	
-					// If there's a match percentage in the response, update state
-					if (response.data.report.match_percentage !== undefined) {
-							setMatchPercentage(response.data.report.match_percentage);
-					}
-			} catch (error) {
-					console.error("Error comparing UI:", error);
-					alert("Failed to compare UI. Check backend logs.");
-			} finally {
-				setLoading(false);
-			}
+            const response = await axios.post("http://127.0.0.1:8000/compare-ui", formData, {
+                headers: { "Content-Type": "multipart/form-data" }
+            });
+
+            console.log("Comparison Report:", response.data.report);
+            alert("Comparison completed! Check console for results.");
+
+            // If there's a match percentage in the response, update state
+            if (response.data.report.match_percentage !== undefined) {
+                setMatchPercentage(response.data.report.match_percentage);
+            }
+        } catch (error) {
+            console.error("Error comparing UI:", error);
+            alert("Failed to compare UI. Check backend logs.");
+        } finally {
+            setLoading(false);
+        }
     };
 
     return (
@@ -143,7 +143,7 @@ const UploadForm = () => {
 
                     {/* Compare Button */}
                     <button type="submit" className="compare-button" disabled={loading}>
-											{loading ? "Comparing..." : "Compare UI"}
+                        {loading ? "Comparing..." : "Compare UI"}
                     </button>
                 </form>
             )}
