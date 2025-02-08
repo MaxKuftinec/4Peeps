@@ -2,19 +2,19 @@ import cv2
 import numpy as np
 import pytesseract
 import json
+import io
 from skimage.metrics import structural_similarity as ssim
 from PIL import Image
 
 # Set path for Tesseract OCR (Windows users may need to update this)
 pytesseract.pytesseract.tesseract_cmd = r"C:\Program Files\Tesseract-OCR\tesseract.exe"
 
-def load_images(figma_path, ui_path):
-    figma_img = cv2.imread(figma_path)
-    ui_img = cv2.imread(ui_path)
-
-    # Resize images to match dimensions (keeping aspect ratio)
+def load_images(figma_bytes, ui_bytes):
+    figma_img = np.array(Image.open(io.BytesIO(figma_bytes)))
+    ui_img = np.array(Image.open(io.BytesIO(ui_bytes)))
+    figma_img = cv2.cvtColor(figma_img, cv2.COLOR_RGB2BGR)
+    ui_img = cv2.cvtColor(ui_img, cv2.COLOR_RGB2BGR)
     figma_img = cv2.resize(figma_img, (ui_img.shape[1], ui_img.shape[0]))
-
     return figma_img, ui_img
 
 def detect_missing_elements(figma_img, ui_img):
@@ -81,9 +81,9 @@ def compare_text(figma_img, ui_img):
     
     return None
 
-def generate_comparison_report(figma_path, ui_path):
+def generate_comparison_report(figma_bytes, ui_bytes):
     """Runs all checks and returns a structured JSON report."""
-    figma_img, ui_img = load_images(figma_path, ui_path)
+    figma_img, ui_img = load_images(figma_bytes, ui_bytes)
 
     report = {
         "differences": []
@@ -111,10 +111,3 @@ def generate_comparison_report(figma_path, ui_path):
         report["differences"].append(text_issue)
 
     return json.dumps(report, indent=4)
-
-# Example usage
-figma_screenshot = "figma_design.png"  # Path to Figma screenshot
-ui_screenshot = "ui_actual.png"  # Path to actual UI screenshot
-
-report = generate_comparison_report(figma_screenshot, ui_screenshot)
-print(report)
