@@ -1,8 +1,9 @@
 from fastapi import FastAPI, UploadFile, Form, File
-from fastapi.responses import JSONResponse
+from fastapi.responses import JSONResponse, FileResponse
 from fastapi.middleware.cors import CORSMiddleware
 import base64
 import jarvis
+import tempfile
 
 # FastAPI App
 app = FastAPI()
@@ -27,10 +28,14 @@ async def compare_ui(figma_file: UploadFile = File(...), ui_file: UploadFile = F
     figma_bytes = await figma_file.read()
     ui_bytes = await ui_file.read()
 
-    report = jarvis.generate_comparison_report(figma_bytes, ui_bytes)  # Call function from jarvis.py
+    report, marked_img_base64 = jarvis.generate_comparison_report(figma_bytes, ui_bytes)
 
-    return {"status": "success", "report": report}
+    return {
+        "status": "success",
+        "report": report,
+        "marked_image": marked_img_base64
+    }
 
 @app.get('/testapi/')
 async def testapi():
-    return JSONResponse(status_code=200, content={"message": "Api call success"})
+    return JSONResponse(status_code=200, content={"message": "Api call success 42"})
