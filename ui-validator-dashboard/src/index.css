@@ -9,7 +9,7 @@
   --button-bg: linear-gradient(99.78deg, #F76443 25.89%, #FEC746 109.55%);
   --button-hover-bg: linear-gradient(99.78deg, #e76042 25.89%, #b89032 109.55%);
   --icon-color: #F76443;
-
+  --good-job: lightgreen;
 }
 
 /* Dark Theme */
@@ -22,6 +22,7 @@
   --button-bg: linear-gradient(99.78deg, #F76443 25.89%, #FEC746 109.55%);
   --button-hover-bg: linear-gradient(99.78deg, #e76042 25.89%, #b89032 109.55%);
   --icon-color: #F76443;
+  --good-job: green;
 }
 
 body {
@@ -44,6 +45,17 @@ code {
   box-shadow: 0px 4px 12px var(--shadow-color);
   border-radius: 12px;
   max-width: 40%;
+  margin: 50px auto;
+  text-align: center;
+  color: var(--text-color);
+}
+
+.file_container {
+  background-color: var(--form-color);
+  padding: 25px;
+  box-shadow: 0px 4px 12px var(--shadow-color);
+  border-radius: 12px;
+  max-width: 80%;
   margin: 50px auto;
   text-align: center;
   color: var(--text-color);
@@ -153,6 +165,7 @@ code {
   align-items: center;
   justify-content: center;
   gap: .5rem;
+  min-width: 20%;
 }
 
 .match-result svg {
@@ -270,10 +283,41 @@ code {
   text-align: left;
 }
 
+#good-job {
+  color: var(--good-job);
+}
+
+.image-container {
+  display: flex;
+  justify-content: space-between;
+  gap: 20px;
+}
+
+.image-box {
+  flex: 1;
+  text-align: center;
+}
+
+.image-box img,
+.comparison-single img {
+  max-width: 70%;
+  height: auto;
+  margin-bottom: 10px;
+}
+
+.comparison-single {
+  margin-top: 20px;
+  text-align: center;
+}
+
 @media (max-width: 1050px) {
   .upload-form-container {
     max-width: 90%;
     padding: 20px;
+  }
+
+  .file_container {
+    max-width: 90%;
   }
 
   .upload-form-container h2 {

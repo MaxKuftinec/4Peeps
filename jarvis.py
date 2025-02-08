@@ -8,8 +8,8 @@ from skimage.metrics import structural_similarity as ssim
 from PIL import Image
 
 # Set path for Tesseract OCR
-pytesseract.pytesseract.tesseract_cmd = r"C:\Program Files\Tesseract-OCR\tesseract.exe"
-# pytesseract.pytesseract.tesseract_cmd = "/opt/homebrew/bin/tesseract"
+# pytesseract.pytesseract.tesseract_cmd = r"C:\Program Files\Tesseract-OCR\tesseract.exe"
+pytesseract.pytesseract.tesseract_cmd = "/opt/homebrew/bin/tesseract"
 
 def load_images(figma_bytes, ui_bytes):
     figma_img = np.array(Image.open(io.BytesIO(figma_bytes)))
@@ -70,10 +70,6 @@ def draw_markers(figma_img, ui_img, alignment_contours, text_mismatch_positions)
         x, y, w, h = cv2.boundingRect(contour)
         cv2.rectangle(marked_img, (x, y), (x + w, y + h), (0, 0, 255), 2)
 
-    # Draw text mismatch positions (example: top-left corner)
-    for pos in text_mismatch_positions:
-        cv2.putText(marked_img, "Text Mismatch", (10, 30), cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 0, 255), 2)
-
     return marked_img
 
 def generate_comparison_report(figma_bytes, ui_bytes):
@@ -89,7 +85,9 @@ def generate_comparison_report(figma_bytes, ui_bytes):
     alignment_result = check_alignment(figma_img, ui_img)
     if alignment_result["score"] < 0.9:
         report["differences"].append({"issue": "Misalignment detected", "similarity_score": round(alignment_result["score"], 2)})
-
+    else: 
+        report["differences"].append({"issue": "Misalignment detected", "similarity_score": round(alignment_result["score"], 2)})
+        
     # Check color differences
     color_diff = detect_color_difference(figma_img, ui_img)
     if color_diff > 20:

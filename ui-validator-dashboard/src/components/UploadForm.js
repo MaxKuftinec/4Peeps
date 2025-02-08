@@ -12,7 +12,7 @@ const UploadForm = () => {
     const [matchPercentage, setMatchPercentage] = useState(null);
     const [loading, setLoading] = useState(false); // <-- Add this line
     const [markedImage, setMarkedImage] = useState(null);
-    const [description, setDescription] = useState("");
+    // const [description, setDescription] = useState("");
 
     const resetForm = () => {
         setFigmaOption(null);
@@ -23,7 +23,7 @@ const UploadForm = () => {
         setWebsiteFile(null);
         setMatchPercentage(null);
         setLoading(false);
-        setDescription("");
+        setMarkedImage([]);
     };
 
     const handleCompare = async (e) => {
@@ -46,9 +46,12 @@ const UploadForm = () => {
             });
 
             console.log("Comparison Report:", response.data.report);
-            if (response.data.marked_image) {
-                setMarkedImage(`data:image/png;base64,${response.data.marked_image}`);
-            }
+            const images = [];
+            if (figmaFile) images.push(URL.createObjectURL(figmaFile));
+            if (websiteFile) images.push(URL.createObjectURL(websiteFile));
+            if (response.data.marked_image) images.push(`data:image/png;base64,${response.data.marked_image}`);
+
+            setMarkedImage(images);
 
             if (response.data.report.match_percentage !== undefined) {
                 setMatchPercentage(response.data.report.match_percentage);
@@ -68,12 +71,13 @@ const UploadForm = () => {
                 }
 
                 // Extract all descriptions
-                const extractedDescriptions = differences.map(diff => diff.description).filter(desc => desc);
-                setDescription(extractedDescriptions);
+
+                // const extractedDescriptions = differences.map(diff => diff.description).filter(desc => desc);
+                // setDescription(extractedDescriptions);
             } else {
                 console.error("Unexpected API response format:", response.data);
                 setMatchPercentage(null);
-                setDescription([]);
+                // setDescription([]);
             }
         } catch (error) {
             console.error("Error comparing UI:", error);
@@ -84,116 +88,117 @@ const UploadForm = () => {
     };
 
     return (
-        <div className="upload-form-container">
-            <h2>Compare UI with Figma</h2>
+        <>
+            <div className="upload-form-container">
+                <h2>Compare UI with Figma</h2>
 
-            {/* Ask for Figma & Website options first */}
-            {figmaOption === null || websiteOption === null ? (
-                <div className="selection-container">
-                    <div className="selection-box">
-                        <p>How would you like to provide the Figma design?</p>
-                        <div className="select-button">
-                            <button onClick={() => setFigmaOption("url")} className={`option-button ${figmaOption === "url" ? "selected" : ""}`}>
-                                <FaLink className="icon_logo" /> Use Figma URL
-                            </button>
-                            <button onClick={() => setFigmaOption("file")} className={`option-button ${figmaOption === "file" ? "selected" : ""}`}>
-                                <FaFileAlt className="icon_logo" /> Upload Figma File
-                            </button>
+                {/* Ask for Figma & Website options first */}
+                {figmaOption === null || websiteOption === null ? (
+                    <div className="selection-container">
+                        <div className="selection-box">
+                            <p>How would you like to provide the Figma design?</p>
+                            <div className="select-button">
+                                <button onClick={() => setFigmaOption("url")} className={`option-button ${figmaOption === "url" ? "selected" : ""}`}>
+                                    <FaLink className="icon_logo" /> Use Figma URL
+                                </button>
+                                <button onClick={() => setFigmaOption("file")} className={`option-button ${figmaOption === "file" ? "selected" : ""}`}>
+                                    <FaFileAlt className="icon_logo" /> Upload Figma File
+                                </button>
+                            </div>
+                        </div>
+
+                        <div className="selection-box">
+                            <p>How would you like to provide the Website design?</p>
+                            <div className="select-button">
+                                <button onClick={() => setWebsiteOption("url")} className={`option-button ${websiteOption === "url" ? "selected" : ""}`}>
+                                    <FaGlobe className="icon_logo" /> Use Website URL
+                                </button>
+                                <button onClick={() => setWebsiteOption("file")} className={`option-button ${websiteOption === "file" ? "selected" : ""}`}>
+                                    <FaFileAlt className="icon_logo" /> Upload Website Screenshot
+                                </button>
+                            </div>
                         </div>
                     </div>
+                ) : (
+                    <form onSubmit={handleCompare}>
+                        {/* Figma Input */}
+                        {figmaOption === "url" && (
+                            <div className="input-group">
+                                <label>
+                                    <FaLink /> Figma Design URL
+                                </label>
+                                <input
+                                    type="url"
+                                    placeholder="https://www.figma.com/file/..."
+                                    value={figmaUrl}
+                                    onChange={(e) => setFigmaUrl(e.target.value)}
+                                    required
+                                />
+                            </div>
+                        )}
 
-                    <div className="selection-box">
-                        <p>How would you like to provide the Website design?</p>
-                        <div className="select-button">
-                            <button onClick={() => setWebsiteOption("url")} className={`option-button ${websiteOption === "url" ? "selected" : ""}`}>
-                                <FaGlobe className="icon_logo" /> Use Website URL
-                            </button>
-                            <button onClick={() => setWebsiteOption("file")} className={`option-button ${websiteOption === "file" ? "selected" : ""}`}>
-                                <FaFileAlt className="icon_logo" /> Upload Website Screenshot
-                            </button>
+                        {figmaOption === "file" && (
+                            <div className="input-group">
+                                <label>
+                                    <FaFileAlt /> Upload Figma Design File
+                                </label>
+                                <input
+                                    type="file"
+                                    accept=".png, .jpg, .jpeg, .pdf"
+                                    onChange={(e) => setFigmaFile(e.target.files[0])}
+                                    required
+                                />
+                                {figmaFile && <p className="file-name">{figmaFile.name}</p>}
+                            </div>
+                        )}
+
+                        {/* Website Input */}
+                        {websiteOption === "url" && (
+                            <div className="input-group">
+                                <label>
+                                    <FaGlobe /> Live Website URL
+                                </label>
+                                <input
+                                    type="url"
+                                    placeholder="https://yourwebsite.com"
+                                    value={websiteUrl}
+                                    onChange={(e) => setWebsiteUrl(e.target.value)}
+                                    required
+                                />
+                            </div>
+                        )}
+
+                        {websiteOption === "file" && (
+                            <div className="input-group">
+                                <label>
+                                    <FaFileAlt /> Upload Website Screenshot
+                                </label>
+                                <input
+                                    type="file"
+                                    accept=".png, .jpg, .jpeg"
+                                    onChange={(e) => setWebsiteFile(e.target.files[0])}
+                                    required
+                                />
+                                {websiteFile && <p className="file-name">{websiteFile.name}</p>}
+                            </div>
+                        )}
+
+                        {/* Compare Button */}
+                        <button type="submit" className="compare-button" disabled={loading}>
+                            {loading ? "Comparing..." : "Compare UI"}
+                        </button>
+                    </form>
+                )}
+
+                {/* Match Percentage Result */}
+                {matchPercentage !== null && (
+                    <footer>
+                        <div className="match-result" id={matchPercentage === 100 ? "good-job" : undefined}>
+                            <FaCheckCircle />
+                            <p id={matchPercentage === 100 ? "good-job" : undefined}>Match: {matchPercentage}%</p>
                         </div>
-                    </div>
-                </div>
-            ) : (
-                <form onSubmit={handleCompare}>
-                    {/* Figma Input */}
-                    {figmaOption === "url" && (
-                        <div className="input-group">
-                            <label>
-                                <FaLink /> Figma Design URL
-                            </label>
-                            <input
-                                type="url"
-                                placeholder="https://www.figma.com/file/..."
-                                value={figmaUrl}
-                                onChange={(e) => setFigmaUrl(e.target.value)}
-                                required
-                            />
-                        </div>
-                    )}
-
-                    {figmaOption === "file" && (
-                        <div className="input-group">
-                            <label>
-                                <FaFileAlt /> Upload Figma Design File
-                            </label>
-                            <input
-                                type="file"
-                                accept=".png, .jpg, .jpeg, .pdf"
-                                onChange={(e) => setFigmaFile(e.target.files[0])}
-                                required
-                            />
-                            {figmaFile && <p className="file-name">{figmaFile.name}</p>}
-                        </div>
-                    )}
-
-                    {/* Website Input */}
-                    {websiteOption === "url" && (
-                        <div className="input-group">
-                            <label>
-                                <FaGlobe /> Live Website URL
-                            </label>
-                            <input
-                                type="url"
-                                placeholder="https://yourwebsite.com"
-                                value={websiteUrl}
-                                onChange={(e) => setWebsiteUrl(e.target.value)}
-                                required
-                            />
-                        </div>
-                    )}
-
-                    {websiteOption === "file" && (
-                        <div className="input-group">
-                            <label>
-                                <FaFileAlt /> Upload Website Screenshot
-                            </label>
-                            <input
-                                type="file"
-                                accept=".png, .jpg, .jpeg"
-                                onChange={(e) => setWebsiteFile(e.target.files[0])}
-                                required
-                            />
-                            {websiteFile && <p className="file-name">{websiteFile.name}</p>}
-                        </div>
-                    )}
-
-                    {/* Compare Button */}
-                    <button type="submit" className="compare-button" disabled={loading}>
-                        {loading ? "Comparing..." : "Compare UI"}
-                    </button>
-                </form>
-            )}
-
-            {/* Match Percentage Result */}
-            {matchPercentage !== null && (
-                <footer>
-                    <div className="match-result">
-                        <FaCheckCircle />
-                        <p>Match: {matchPercentage}%</p>
-                    </div>
-                    {/* Display extracted descriptions */}
-                    {description.length > 0 && (
+                        {/* Display extracted descriptions */}
+                        {/* {description.length > 0 && (
                         <div className="comparison-details">
                             <h3>Comparison Details:</h3>
                             <ul>
@@ -202,22 +207,44 @@ const UploadForm = () => {
                                 ))}
                             </ul>
                         </div>
-                    )}
-                    {/* Start Again Button */}
-                    <button className="compare-button" id="again_btn" onClick={resetForm}>
-                        Compare Again
-                    </button>
-                </footer>
-            )}
+                    )} */}
+                        {/* Start Again Button */}
+                        <button className="compare-button" id="again_btn" onClick={resetForm}>
+                            Compare Again
+                        </button>
+                    </footer>
+                )}
+            </div>
+            <div
+                className="file_container"
+                style={{ padding: Array.isArray(markedImage) && markedImage.length > 0 ? "20px" : "0" }}
+            >
+                {Array.isArray(markedImage) && markedImage.length > 0 && (
+                    <div className="comparison-result">
+                        <h3>Comparison Result:</h3>
+                        <div className="image-container">
+                            {/* Figma Screenshot */}
+                            <div className="image-box">
+                                <h4>Figma Screenshot</h4>
+                                <img src={markedImage[0]} alt="Figma Screenshot" />
+                            </div>
 
-            {/* Display Marked Image Result */}
-            {markedImage && (
-                <div className="comparison-result">
-                    <h3>Comparison Result:</h3>
-                    <img src={markedImage} alt="Comparison Result" style={{ maxWidth: "100%", height: "auto" }} />
-                </div>
-            )}
-        </div>
+                            {/* Website Screenshot */}
+                            <div className="image-box">
+                                <h4>Website Screenshot</h4>
+                                <img src={markedImage[1]} alt="Website Screenshot" />
+                            </div>
+                        </div>
+
+                        {/* Comparison Result (below the side-by-side images) */}
+                        <div className="comparison-single">
+                            <h4>Comparison Result</h4>
+                            <img src={markedImage[2]} alt="Comparison Result" />
+                        </div>
+                    </div>
+                )}
+            </div>
+        </>
     );
 };
 
