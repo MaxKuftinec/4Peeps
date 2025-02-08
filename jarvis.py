@@ -20,7 +20,6 @@ def load_images(figma_bytes, ui_bytes):
     return figma_img, ui_img
 
 def detect_missing_elements(figma_img, ui_img):
-    """Detects elements that exist in the Figma design but are missing in the UI."""
     orb = cv2.ORB_create()
     figma_gray = cv2.cvtColor(figma_img, cv2.COLOR_BGR2GRAY)
     ui_gray = cv2.cvtColor(ui_img, cv2.COLOR_BGR2GRAY)
@@ -28,7 +27,7 @@ def detect_missing_elements(figma_img, ui_img):
     keypoints2, descriptors2 = orb.detectAndCompute(ui_gray, None)
 
     if descriptors1 is None or descriptors2 is None:
-        return ["No key features detected. Ensure clear UI elements."]
+        return []
 
     bf = cv2.BFMatcher(cv2.NORM_HAMMING, crossCheck=True)
     matches = bf.match(descriptors1, descriptors2)
@@ -39,7 +38,6 @@ def detect_missing_elements(figma_img, ui_img):
     return missing_elements
 
 def check_alignment(figma_img, ui_img):
-    """Checks for alignment issues using SSIM."""
     figma_gray = cv2.cvtColor(figma_img, cv2.COLOR_BGR2GRAY)
     ui_gray = cv2.cvtColor(ui_img, cv2.COLOR_BGR2GRAY)
     score, diff = ssim(figma_gray, ui_gray, full=True)
@@ -49,19 +47,16 @@ def check_alignment(figma_img, ui_img):
     return {"score": score, "contours": contours}
 
 def detect_color_difference(figma_img, ui_img):
-    """Compares color differences in both images."""
     figma_mean_color = cv2.mean(figma_img)[:3]
     ui_mean_color = cv2.mean(ui_img)[:3]
     color_diff = np.linalg.norm(np.array(figma_mean_color) - np.array(ui_mean_color))
     return color_diff
 
 def extract_text(img):
-    """Extracts text from an image using OCR."""
     gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
     return pytesseract.image_to_string(gray)
 
 def compare_text(figma_img, ui_img):
-    """Compares extracted text between the Figma design and the actual UI."""
     figma_text = extract_text(figma_img).strip()
     ui_text = extract_text(ui_img).strip()
     return figma_text, ui_text
@@ -85,15 +80,10 @@ def generate_comparison_report(figma_bytes, ui_bytes):
     """Runs all checks and returns a structured JSON report and marked-up image."""
     figma_img, ui_img = load_images(figma_bytes, ui_bytes)
 
-    report = {
-        "differences": []
-    }
+    report = {"differences": []}
 
-    # Detect missing elements
     missing_elements = detect_missing_elements(figma_img, ui_img)
-    if missing_elements:
-        for element in missing_elements:
-            report["differences"].append({"element": "UI Component", "issue": element})
+    report["differences"].extend(missing_elements)
 
     # Check alignment issues
     alignment_result = check_alignment(figma_img, ui_img)

@@ -145,12 +145,20 @@ code {
 /* Match Result */
 .match-result {
   margin-top: 25px;
+  background: var(--bg-color);
+  padding: 10px;
+  border-radius: 12px;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  gap: .5rem;
 }
 
 .match-result svg {
   color: var(--match-result-color);
-  font-size: 32px;
-  margin-bottom: 8px;
+  font-size: 22px;
+  margin-bottom: 0;
 }
 
 .match-result p {
@@ -182,6 +190,10 @@ code {
 
 .button:hover {
   background-color: darkblue;
+}
+
+#again_btn {
+  width: 35%;
 }
 
 /* Selection Container */
@@ -254,6 +266,10 @@ code {
   font-size: 24px;
 }
 
+.comparison-details {
+  text-align: left;
+}
+
 @media (max-width: 1050px) {
   .upload-form-container {
     max-width: 90%;
@@ -285,6 +301,20 @@ code {
 
   .icon_logo {
     font-size: 12px;
+  }
+
+  .match-result svg {
+    font-size: 20px;
+    margin-bottom: 0;
+  }
+
+  .match-result p {
+    font-size: 15px;
+  }
+
+  .comparison-details {
+    text-align: left;
+    font-size: 14px;
   }
 }
 
@@ -320,5 +350,9 @@ code {
 
   .icon_logo {
     font-size: 8px;
+  }
+
+  #again_btn {
+    width: 80%;
   }
 }

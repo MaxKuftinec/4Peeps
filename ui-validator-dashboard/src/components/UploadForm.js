@@ -12,7 +12,19 @@ const UploadForm = () => {
     const [matchPercentage, setMatchPercentage] = useState(null);
     const [loading, setLoading] = useState(false); // <-- Add this line
 		const [markedImage, setMarkedImage] = useState(null);
+    const [description, setDescription] = useState("");
 
+		const resetForm = () => {
+			setFigmaOption(null);
+			setWebsiteOption(null);
+			setFigmaUrl("");
+			setFigmaFile(null);
+			setWebsiteUrl("");
+			setWebsiteFile(null);
+			setMatchPercentage(null);
+			setLoading(false);
+			setDescription("");
+		};
 
     const handleCompare = async (e) => {
         e.preventDefault();
@@ -25,8 +37,8 @@ const UploadForm = () => {
         setLoading(true);
 
         const formData = new FormData();
-        formData.append("figma_file", figmaFile);  // Assuming `figmaFile` is stored in state
-        formData.append("ui_file", websiteFile);   // Assuming `uiFile` is stored in state
+        formData.append("figma_file", figmaFile);
+        formData.append("ui_file", websiteFile);
 
         try {
             const response = await axios.post("http://127.0.0.1:8000/compare-ui", formData, {
@@ -43,9 +55,26 @@ const UploadForm = () => {
 						}
             alert("Comparison completed! Check console for results.");
 
-            // If there's a match percentage in the response, update state
-            if (response.data.report.match_percentage !== undefined) {
-                setMatchPercentage(response.data.report.match_percentage);
+            const report = JSON.parse(response.data.report);
+            console.log("Parsed Report:", report);
+
+            if (report && Array.isArray(report.differences)) {
+                const differences = report.differences;
+                const alignmentIssue = differences.find(diff => diff.issue === "Misalignment detected");
+
+                if (alignmentIssue && typeof alignmentIssue.similarity_score === "number") {
+                    setMatchPercentage((alignmentIssue.similarity_score * 100));
+                } else {
+                    setMatchPercentage(null);
+                }
+
+                // Extract all descriptions
+                const extractedDescriptions = differences.map(diff => diff.description).filter(desc => desc);
+                setDescription(extractedDescriptions);
+            } else {
+                console.error("Unexpected API response format:", response.data);
+                setMatchPercentage(null);
+                setDescription([]);
             }
         } catch (error) {
             console.error("Error comparing UI:", error);
@@ -159,10 +188,27 @@ const UploadForm = () => {
 
             {/* Match Percentage Result */}
             {matchPercentage !== null && (
-                <div className="match-result">
-                    <FaCheckCircle />
-                    <p>Match: {matchPercentage}%</p>
-                </div>
+                <footer>
+                    <div className="match-result">
+                        <FaCheckCircle />
+                        <p>Match: {matchPercentage}%</p>
+                    </div>
+                    {/* Display extracted descriptions */}
+                    {description.length > 0 && (
+                        <div className="comparison-details">
+                            <h3>Comparison Details:</h3>
+                            <ul>
+                                {description.map((desc, index) => (
+                                    <li key={index}>{desc}</li>
+                                ))}
+                            </ul>
+                        </div>
+                    )}
+                    {/* Start Again Button */}
+                    <button className="compare-button" id="again_btn" onClick={resetForm}>
+                        Compare Again
+                    </button>
+                </footer>
             )}
 
 						{/* Display Marked Image Result */}
