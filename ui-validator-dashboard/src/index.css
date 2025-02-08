@@ -1,26 +1,27 @@
 @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap');
 
 :root {
-  --bg-color: #f5f5f5;
-  --form-color: #ccc;
-  --text-color: #222;
-  --input-bg: #fff;
-  --input-border: #ccc;
-  --button-bg: linear-gradient(135deg, #1e90ff, #0077cc);
-  --button-hover-bg: linear-gradient(135deg, #0077cc, #005fa3);
-  --icon-color: #1e90ff;
-}
-
-/* Dark Theme */
-[data-theme="dark"] {
   --bg-color: #222;
   --form-color: #333;
   --text-color: #fff;
   --input-bg: #444;
   --input-border: #555;
-  --button-bg: linear-gradient(135deg, #1e90ff, #0077cc);
-  --button-hover-bg: linear-gradient(135deg, #0077cc, #005fa3);
-  --icon-color: #1e90ff;
+  --button-bg: linear-gradient(99.78deg, #F76443 25.89%, #FEC746 109.55%);
+  --button-hover-bg: linear-gradient(99.78deg, #e76042 25.89%, #b89032 109.55%);
+  --icon-color: #F76443;
+
+}
+
+/* Dark Theme */
+[data-theme="light"] {
+  --bg-color: #f5f5f5;
+  --form-color: #ccc;
+  --text-color: #222;
+  --input-bg: #fff;
+  --input-border: #ccc;
+  --button-bg: linear-gradient(99.78deg, #F76443 25.89%, #FEC746 109.55%);
+  --button-hover-bg: linear-gradient(99.78deg, #e76042 25.89%, #b89032 109.55%);
+  --icon-color: #F76443;
 }
 
 body {
@@ -152,7 +153,8 @@ code {
 }
 
 .button {
-  background-color: blue;
+  background: linear-gradient(99.78deg, #F76443 25.89%, #FEC746 109.55%);
+  ;
   color: white;
   padding: 10px 15px;
   border: none;
@@ -188,13 +190,14 @@ code {
 
 /* Box Buttons */
 .option-button {
-  background: linear-gradient(135deg, #1e90ff, #0077cc);
-  color: white;
+  background: transparent;
+  border: 3px solid #F76443;
+  color: var(--text-color);
   font-size: 16px;
   font-weight: bold;
   font-family: inherit;
   padding: 15px 20px;
-  border: none;
+  /* border: none; */
   border-radius: 8px;
   cursor: pointer;
   width: 220px;
@@ -209,11 +212,23 @@ code {
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 }
 
+.option-button.selected {
+  background: linear-gradient(99.78deg, #F76443 25.89%, #FEC746 109.55%);
+  border: none;
+  color: white;
+}
+
+.option-button.selected:hover {
+  background: linear-gradient(99.78deg, #F76443 25.89%, #FEC746 109.55%);
+}
+
 /* Hover Effect */
 .option-button:hover {
-  background: linear-gradient(135deg, #0077cc, #005fa3);
+  background: linear-gradient(99.78deg, #F76443 25.89%, #FEC746 109.55%);
+  border: none;
   transform: translateY(-3px);
   box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2);
+  color: white;
 }
 
 /* Icons inside buttons */

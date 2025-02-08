@@ -28,10 +28,10 @@ const UploadForm = () => {
                     <div className="selection-box">
                         <p>How would you like to provide the Figma design?</p>
                         <div className="select-button">
-                            <button onClick={() => setFigmaOption("url")} className="option-button">
+                            <button onClick={() => setFigmaOption("url")} className={`option-button ${figmaOption === "url" ? "selected" : ""}`}>
                                 <FaLink className="icon_logo" /> Use Figma URL
                             </button>
-                            <button onClick={() => setFigmaOption("file")} className="option-button">
+                            <button onClick={() => setFigmaOption("file")} className={`option-button ${figmaOption === "file" ? "selected" : ""}`}>
                                 <FaFileAlt className="icon_logo" /> Upload Figma File
                             </button>
                         </div>
@@ -40,10 +40,10 @@ const UploadForm = () => {
                     <div className="selection-box">
                         <p>How would you like to provide the Website design?</p>
                         <div className="select-button">
-                            <button onClick={() => setWebsiteOption("url")} className="option-button">
+                            <button onClick={() => setWebsiteOption("url")} className={`option-button ${websiteOption === "url" ? "selected" : ""}`}>
                                 <FaGlobe className="icon_logo" /> Use Website URL
                             </button>
-                            <button onClick={() => setWebsiteOption("file")} className="option-button">
+                            <button onClick={() => setWebsiteOption("file")} className={`option-button ${websiteOption === "file" ? "selected" : ""}`}>
                                 <FaFileAlt className="icon_logo" /> Upload Website Screenshot
                             </button>
                         </div>
