@@ -1,8 +1,10 @@
 import React, { useState } from "react";
-import { FaLink, FaGlobe, FaCheckCircle } from "react-icons/fa";
+import { FaLink, FaGlobe, FaCheckCircle, FaFileAlt } from "react-icons/fa";
 
 const UploadForm = () => {
+    const [figmaOption, setFigmaOption] = useState(null); // "url" or "file"
     const [figmaUrl, setFigmaUrl] = useState("");
+    const [figmaFile, setFigmaFile] = useState(null);
     const [websiteUrl, setWebsiteUrl] = useState("");
     const [matchPercentage, setMatchPercentage] = useState(null);
 
@@ -15,54 +17,82 @@ const UploadForm = () => {
     };
 
     return (
-        <div className="bg-white p-8 shadow-lg rounded-lg max-w-lg mx-auto mt-6">
-            <h2 className="text-2xl font-semibold mb-4 text-center">Compare UI with Figma</h2>
+        <div className="upload-form-container">
+            <h2>Compare UI with Figma</h2>
 
-            <form onSubmit={handleCompare} className="space-y-6">
-                {/* Figma URL Input */}
-                <div>
-                    <label className="block font-medium mb-2 flex items-center">
-                        <FaLink className="mr-2 text-blue-500" /> Figma Design URL
-                    </label>
-                    <input
-                        type="url"
-                        placeholder="https://www.figma.com/file/..."
-                        value={figmaUrl}
-                        onChange={(e) => setFigmaUrl(e.target.value)}
-                        className="w-full border border-gray-300 p-2 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-                        required
-                    />
+            {/* Step 1: Ask User for Input Method */}
+            {figmaOption === null ? (
+                <div className="selection-container">
+                    <p>How would you like to provide the Figma design?</p>
+                    <div className="select-button">
+                        <button onClick={() => setFigmaOption("url")} className="option-button">
+                            <FaLink /> Use Figma URL
+                        </button>
+                        <button onClick={() => setFigmaOption("file")} className="option-button">
+                            <FaFileAlt /> Upload Figma File
+                        </button>
+                    </div>
                 </div>
+            ) : (
+                <form onSubmit={handleCompare}>
+                    {/* Figma URL Input */}
+                    {figmaOption === "url" && (
+                        <div className="input-group">
+                            <label>
+                                <FaLink /> Figma Design URL
+                            </label>
+                            <input
+                                type="url"
+                                placeholder="https://www.figma.com/file/..."
+                                value={figmaUrl}
+                                onChange={(e) => setFigmaUrl(e.target.value)}
+                                required
+                            />
+                        </div>
+                    )}
 
-                {/* Website URL Input */}
-                <div>
-                    <label className="block font-medium mb-2 flex items-center">
-                        <FaGlobe className="mr-2 text-green-500" /> Live Website URL
-                    </label>
-                    <input
-                        type="url"
-                        placeholder="https://yourwebsite.com"
-                        value={websiteUrl}
-                        onChange={(e) => setWebsiteUrl(e.target.value)}
-                        className="w-full border border-gray-300 p-2 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500"
-                        required
-                    />
-                </div>
+                    {/* Figma File Upload Input */}
+                    {figmaOption === "file" && (
+                        <div className="input-group">
+                            <label>
+                                <FaFileAlt /> Upload Figma Design File
+                            </label>
+                            <input
+                                type="file"
+                                accept=".png, .jpg, .jpeg, .pdf"
+                                onChange={(e) => setFigmaFile(e.target.files[0])}
+                                required
+                            />
+                            {figmaFile && <p className="file-name">{figmaFile.name}</p>}
+                        </div>
+                    )}
 
-                {/* Compare Button */}
-                <button
-                    type="submit"
-                    className="w-full bg-blue-500 text-white font-bold py-2 rounded-lg hover:bg-blue-600 transition duration-200"
-                >
-                    Compare UI
-                </button>
-            </form>
+                    {/* Website URL Input */}
+                    <div className="input-group">
+                        <label>
+                            <FaGlobe /> Live Website URL
+                        </label>
+                        <input
+                            type="url"
+                            placeholder="https://yourwebsite.com"
+                            value={websiteUrl}
+                            onChange={(e) => setWebsiteUrl(e.target.value)}
+                            required
+                        />
+                    </div>
+
+                    {/* Compare Button */}
+                    <button type="submit" className="compare-button">
+                        Compare UI
+                    </button>
+                </form>
+            )}
 
             {/* Match Percentage Result */}
             {matchPercentage !== null && (
-                <div className="mt-6 text-center">
-                    <FaCheckCircle className="text-green-500 text-4xl mx-auto" />
-                    <p className="text-lg font-bold">Match: {matchPercentage}%</p>
+                <div className="match-result">
+                    <FaCheckCircle />
+                    <p>Match: {matchPercentage}%</p>
                 </div>
             )}
         </div>
