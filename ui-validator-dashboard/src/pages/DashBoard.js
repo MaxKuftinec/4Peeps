@@ -1,16 +1,3 @@
-<<<<<<< HEAD
-import React from "react";
-import UploadForm from "../components/UploadForm";
-
-const Dashboard = () => {
-    return (
-        <div className="dashboard-container">
-            <UploadForm />
-        </div>
-    );
-};
-
-=======
 import React from "react";
 import UploadForm from "../components/UploadForm";
 
@@ -23,5 +10,4 @@ const Dashboard = () => {
     );
 };
 
->>>>>>> 59aaa37 (Test)
 export default Dashboard;
