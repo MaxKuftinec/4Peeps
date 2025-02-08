@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 import React from "react";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import NavBar from "./components/NavBar";
@@ -17,4 +18,13 @@ function App() {
   );
 }
 
+=======
+import React from "react";
+import Dashboard from "./pages/DashBoard";
+
+function App() {
+  return <Dashboard />;
+}
+
+>>>>>>> 59aaa37 (Test)
 export default App;
