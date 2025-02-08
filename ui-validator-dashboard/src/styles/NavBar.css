@@ -2,14 +2,14 @@
     --navbar-bg: #333;
     --navbar-text: white;
     --toggle-border: white;
-    --toggle-hover: rgba(255, 255, 255, 0.2);
+    --toggle-hover: #ccc;
 }
 
 [data-theme="light"] {
     --navbar-bg: #ccc;
     --navbar-text: #333;
     --toggle-border: black;
-    --toggle-hover: rgba(0, 0, 0, 0.1);
+    --toggle-hover: #444;
 }
 
 .navbar {
@@ -44,8 +44,8 @@
 
 /* Theme Toggle Button */
 .theme-toggle {
-    background: none;
-    border: 1px solid var(--toggle-border);
+    background: var(--navbar-text);
+    border: none;
     padding: 8px 12px;
     cursor: pointer;
     font-size: 14px;
