@@ -23,8 +23,8 @@ const UploadForm = () => {
         setLoading(true);
 
         const formData = new FormData();
-        formData.append("figma_file", figmaFile);  // Assuming `figmaFile` is stored in state
-        formData.append("ui_file", websiteFile);   // Assuming `uiFile` is stored in state
+        formData.append("figma_file", figmaFile);
+        formData.append("ui_file", websiteFile);
 
         try {
             const response = await axios.post("http://127.0.0.1:8000/compare-ui", formData, {
@@ -32,11 +32,24 @@ const UploadForm = () => {
             });
 
             console.log("Comparison Report:", response.data.report);
-            alert("Comparison completed! Check console for results.");
 
-            // If there's a match percentage in the response, update state
-            if (response.data.report.match_percentage !== undefined) {
-                setMatchPercentage(response.data.report.match_percentage);
+            // Convert report from string to JSON
+            const report = JSON.parse(response.data.report);
+
+            console.log("Parsed Report:", report);
+
+            if (report && Array.isArray(report.differences)) {
+                const differences = report.differences;
+                const alignmentIssue = differences.find(diff => diff.issue === "Misalignment detected");
+
+                if (alignmentIssue && typeof alignmentIssue.similarity_score === "number") {
+                    setMatchPercentage((alignmentIssue.similarity_score * 100));
+                } else {
+                    setMatchPercentage(null);
+                }
+            } else {
+                console.error("Unexpected API response format:", response.data);
+                setMatchPercentage(null);
             }
         } catch (error) {
             console.error("Error comparing UI:", error);
@@ -45,7 +58,6 @@ const UploadForm = () => {
             setLoading(false);
         }
     };
-
     return (
         <div className="upload-form-container">
             <h2>Compare UI with Figma</h2>
