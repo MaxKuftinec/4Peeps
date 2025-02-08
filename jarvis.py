@@ -7,7 +7,8 @@ from skimage.metrics import structural_similarity as ssim
 from PIL import Image
 
 # Set path for Tesseract OCR (Windows users may need to update this)
-pytesseract.pytesseract.tesseract_cmd = r"C:\Program Files\Tesseract-OCR\tesseract.exe"
+# pytesseract.pytesseract.tesseract_cmd = r"C:\Program Files\Tesseract-OCR\tesseract.exe"
+pytesseract.pytesseract.tesseract_cmd = "/opt/homebrew/bin/tesseract"
 
 def load_images(figma_bytes, ui_bytes):
     figma_img = np.array(Image.open(io.BytesIO(figma_bytes)))
