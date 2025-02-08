@@ -192,6 +192,10 @@ code {
   background-color: darkblue;
 }
 
+#again_btn {
+  width: 35%;
+}
+
 /* Selection Container */
 .selection-container {
   text-align: center;
@@ -337,5 +341,9 @@ code {
 
   .icon_logo {
     font-size: 8px;
+  }
+
+  #again_btn {
+    width: 80%;
   }
 }

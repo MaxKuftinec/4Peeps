@@ -10,7 +10,18 @@ const UploadForm = () => {
     const [websiteUrl, setWebsiteUrl] = useState("");
     const [websiteFile, setWebsiteFile] = useState(null);
     const [matchPercentage, setMatchPercentage] = useState(null);
-    const [loading, setLoading] = useState(false); // <-- Add this line
+    const [loading, setLoading] = useState(false);
+
+    const resetForm = () => {
+        setFigmaOption(null);
+        setWebsiteOption(null);
+        setFigmaUrl("");
+        setFigmaFile(null);
+        setWebsiteUrl("");
+        setWebsiteFile(null);
+        setMatchPercentage(null);
+        setLoading(false);
+    };
 
     const handleCompare = async (e) => {
         e.preventDefault();
@@ -162,10 +173,16 @@ const UploadForm = () => {
 
             {/* Match Percentage Result */}
             {matchPercentage !== null && (
-                <div className="match-result">
-                    <FaCheckCircle />
-                    <p>Match: {matchPercentage}%</p>
-                </div>
+                <footer>
+                    <div className="match-result">
+                        <FaCheckCircle />
+                        <p>Match: {matchPercentage}%</p>
+                    </div>
+                    {/* Start Again Button */}
+                    <button className="compare-button" id="again_btn" onClick={resetForm}>
+                        Compare Again
+                    </button>
+                </footer>
             )}
         </div>
     );
