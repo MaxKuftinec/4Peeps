@@ -145,12 +145,20 @@ code {
 /* Match Result */
 .match-result {
   margin-top: 25px;
+  background: var(--bg-color);
+  padding: 10px;
+  border-radius: 12px;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  gap: .5rem;
 }
 
 .match-result svg {
   color: var(--match-result-color);
-  font-size: 32px;
-  margin-bottom: 8px;
+  font-size: 22px;
+  margin-bottom: 0;
 }
 
 .match-result p {
@@ -285,6 +293,15 @@ code {
 
   .icon_logo {
     font-size: 12px;
+  }
+
+  .match-result svg {
+    font-size: 20px;
+    margin-bottom: 0;
+  }
+
+  .match-result p {
+    font-size: 15px;
   }
 }
 
