@@ -11,20 +11,20 @@ const UploadForm = () => {
     const [websiteFile, setWebsiteFile] = useState(null);
     const [matchPercentage, setMatchPercentage] = useState(null);
     const [loading, setLoading] = useState(false); // <-- Add this line
-		const [markedImage, setMarkedImage] = useState(null);
+    const [markedImage, setMarkedImage] = useState(null);
     const [description, setDescription] = useState("");
 
-		const resetForm = () => {
-			setFigmaOption(null);
-			setWebsiteOption(null);
-			setFigmaUrl("");
-			setFigmaFile(null);
-			setWebsiteUrl("");
-			setWebsiteFile(null);
-			setMatchPercentage(null);
-			setLoading(false);
-			setDescription("");
-		};
+    const resetForm = () => {
+        setFigmaOption(null);
+        setWebsiteOption(null);
+        setFigmaUrl("");
+        setFigmaFile(null);
+        setWebsiteUrl("");
+        setWebsiteFile(null);
+        setMatchPercentage(null);
+        setLoading(false);
+        setDescription("");
+    };
 
     const handleCompare = async (e) => {
         e.preventDefault();
@@ -46,14 +46,13 @@ const UploadForm = () => {
             });
 
             console.log("Comparison Report:", response.data.report);
-						if (response.data.marked_image) {
-							setMarkedImage(`data:image/png;base64,${response.data.marked_image}`);
-						}
+            if (response.data.marked_image) {
+                setMarkedImage(`data:image/png;base64,${response.data.marked_image}`);
+            }
 
-						if (response.data.report.match_percentage !== undefined) {
-							setMatchPercentage(response.data.report.match_percentage);
-						}
-            alert("Comparison completed! Check console for results.");
+            if (response.data.report.match_percentage !== undefined) {
+                setMatchPercentage(response.data.report.match_percentage);
+            }
 
             const report = JSON.parse(response.data.report);
             console.log("Parsed Report:", report);
@@ -211,15 +210,15 @@ const UploadForm = () => {
                 </footer>
             )}
 
-						{/* Display Marked Image Result */}
-						{markedImage && (
-								<div className="comparison-result">
-										<h3>Comparison Result:</h3>
-										<img src={markedImage} alt="Comparison Result" style={{ maxWidth: "100%", height: "auto" }} />
-								</div>
-						)}
-										</div>
-								);
+            {/* Display Marked Image Result */}
+            {markedImage && (
+                <div className="comparison-result">
+                    <h3>Comparison Result:</h3>
+                    <img src={markedImage} alt="Comparison Result" style={{ maxWidth: "100%", height: "auto" }} />
+                </div>
+            )}
+        </div>
+    );
 };
 
 export default UploadForm;
