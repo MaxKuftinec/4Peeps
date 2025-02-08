@@ -13,14 +13,14 @@ def report_from_openai(figma_bytes, ui_bytes, marked_img_base64, report):
 	
 	# Construct the API request for OpenAI
 	response = client.chat.completions.create(
-			model="gpt-4-vision-preview",
+			model="gpt-4-turbo",
 			messages=[
 					{"role": "system", "content": "You are an expert UI/UX reviewer. Analyze the given images and provide a detailed report on discrepancies."},
 					{"role": "user", "content": [
 							{"type": "text", "text": "Here are two UI screenshots and a marked image highlighting discrepancies. Please generate a detailed report on the differences."},
-							{"type": "image", "image": figma_img_base64},
-							{"type": "image", "image": ui_img_base64},
-							{"type": "image", "image": marked_img_base64},
+							{"type": "image_url", "image_url": {"url": f"data:image/png;base64,{figma_img_base64}"}},
+							{"type": "image_url", "image_url": {"url": f"data:image/png;base64,{ui_img_base64}"}},
+							{"type": "image_url", "image_url": {"url": f"data:image/png;base64,{marked_img_base64}"}},
 							{"type": "text", "text": f"Here is a preliminary report from our detection system: {report}"}
 					]}
 			],
