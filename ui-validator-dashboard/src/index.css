@@ -266,6 +266,10 @@ code {
   font-size: 24px;
 }
 
+.comparison-details {
+  text-align: left;
+}
+
 @media (max-width: 1050px) {
   .upload-form-container {
     max-width: 90%;
@@ -306,6 +310,11 @@ code {
 
   .match-result p {
     font-size: 15px;
+  }
+
+  .comparison-details {
+    text-align: left;
+    font-size: 14px;
   }
 }
 

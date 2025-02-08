@@ -11,6 +11,7 @@ const UploadForm = () => {
     const [websiteFile, setWebsiteFile] = useState(null);
     const [matchPercentage, setMatchPercentage] = useState(null);
     const [loading, setLoading] = useState(false);
+    const [description, setDescription] = useState("");
 
     const resetForm = () => {
         setFigmaOption(null);
@@ -21,6 +22,7 @@ const UploadForm = () => {
         setWebsiteFile(null);
         setMatchPercentage(null);
         setLoading(false);
+        setDescription("");
     };
 
     const handleCompare = async (e) => {
@@ -44,9 +46,7 @@ const UploadForm = () => {
 
             console.log("Comparison Report:", response.data.report);
 
-            // Convert report from string to JSON
             const report = JSON.parse(response.data.report);
-
             console.log("Parsed Report:", report);
 
             if (report && Array.isArray(report.differences)) {
@@ -58,9 +58,14 @@ const UploadForm = () => {
                 } else {
                     setMatchPercentage(null);
                 }
+
+                // Extract all descriptions
+                const extractedDescriptions = differences.map(diff => diff.description).filter(desc => desc);
+                setDescription(extractedDescriptions);
             } else {
                 console.error("Unexpected API response format:", response.data);
                 setMatchPercentage(null);
+                setDescription([]);
             }
         } catch (error) {
             console.error("Error comparing UI:", error);
@@ -69,6 +74,7 @@ const UploadForm = () => {
             setLoading(false);
         }
     };
+
     return (
         <div className="upload-form-container">
             <h2>Compare UI with Figma</h2>
@@ -178,6 +184,17 @@ const UploadForm = () => {
                         <FaCheckCircle />
                         <p>Match: {matchPercentage}%</p>
                     </div>
+                    {/* Display extracted descriptions */}
+                    {description.length > 0 && (
+                        <div className="comparison-details">
+                            <h3>Comparison Details:</h3>
+                            <ul>
+                                {description.map((desc, index) => (
+                                    <li key={index}>{desc}</li>
+                                ))}
+                            </ul>
+                        </div>
+                    )}
                     {/* Start Again Button */}
                     <button className="compare-button" id="again_btn" onClick={resetForm}>
                         Compare Again
