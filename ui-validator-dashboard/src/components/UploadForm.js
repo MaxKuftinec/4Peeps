@@ -3,9 +3,11 @@ import { FaLink, FaGlobe, FaCheckCircle, FaFileAlt } from "react-icons/fa";
 
 const UploadForm = () => {
     const [figmaOption, setFigmaOption] = useState(null); // "url" or "file"
+    const [websiteOption, setWebsiteOption] = useState(null); // "url" or "file"
     const [figmaUrl, setFigmaUrl] = useState("");
     const [figmaFile, setFigmaFile] = useState(null);
     const [websiteUrl, setWebsiteUrl] = useState("");
+    const [websiteFile, setWebsiteFile] = useState(null);
     const [matchPercentage, setMatchPercentage] = useState(null);
 
     const handleCompare = (e) => {
@@ -20,22 +22,36 @@ const UploadForm = () => {
         <div className="upload-form-container">
             <h2>Compare UI with Figma</h2>
 
-            {/* Step 1: Ask User for Input Method */}
-            {figmaOption === null ? (
+            {/* Ask for Figma & Website options first */}
+            {figmaOption === null || websiteOption === null ? (
                 <div className="selection-container">
-                    <p>How would you like to provide the Figma design?</p>
-                    <div className="select-button">
-                        <button onClick={() => setFigmaOption("url")} className="option-button">
-                            <FaLink /> Use Figma URL
-                        </button>
-                        <button onClick={() => setFigmaOption("file")} className="option-button">
-                            <FaFileAlt /> Upload Figma File
-                        </button>
+                    <div className="selection-box">
+                        <p>How would you like to provide the Figma design?</p>
+                        <div className="select-button">
+                            <button onClick={() => setFigmaOption("url")} className="option-button">
+                                <FaLink /> Use Figma URL
+                            </button>
+                            <button onClick={() => setFigmaOption("file")} className="option-button">
+                                <FaFileAlt /> Upload Figma File
+                            </button>
+                        </div>
+                    </div>
+
+                    <div className="selection-box">
+                        <p>How would you like to provide the Website design?</p>
+                        <div className="select-button">
+                            <button onClick={() => setWebsiteOption("url")} className="option-button">
+                                <FaGlobe /> Use Website URL
+                            </button>
+                            <button onClick={() => setWebsiteOption("file")} className="option-button">
+                                <FaFileAlt /> Upload Website Screenshot
+                            </button>
+                        </div>
                     </div>
                 </div>
             ) : (
                 <form onSubmit={handleCompare}>
-                    {/* Figma URL Input */}
+                    {/* Figma Input */}
                     {figmaOption === "url" && (
                         <div className="input-group">
                             <label>
@@ -51,7 +67,6 @@ const UploadForm = () => {
                         </div>
                     )}
 
-                    {/* Figma File Upload Input */}
                     {figmaOption === "file" && (
                         <div className="input-group">
                             <label>
@@ -67,19 +82,36 @@ const UploadForm = () => {
                         </div>
                     )}
 
-                    {/* Website URL Input */}
-                    <div className="input-group">
-                        <label>
-                            <FaGlobe /> Live Website URL
-                        </label>
-                        <input
-                            type="url"
-                            placeholder="https://yourwebsite.com"
-                            value={websiteUrl}
-                            onChange={(e) => setWebsiteUrl(e.target.value)}
-                            required
-                        />
-                    </div>
+                    {/* Website Input */}
+                    {websiteOption === "url" && (
+                        <div className="input-group">
+                            <label>
+                                <FaGlobe /> Live Website URL
+                            </label>
+                            <input
+                                type="url"
+                                placeholder="https://yourwebsite.com"
+                                value={websiteUrl}
+                                onChange={(e) => setWebsiteUrl(e.target.value)}
+                                required
+                            />
+                        </div>
+                    )}
+
+                    {websiteOption === "file" && (
+                        <div className="input-group">
+                            <label>
+                                <FaFileAlt /> Upload Website Screenshot
+                            </label>
+                            <input
+                                type="file"
+                                accept=".png, .jpg, .jpeg"
+                                onChange={(e) => setWebsiteFile(e.target.files[0])}
+                                required
+                            />
+                            {websiteFile && <p className="file-name">{websiteFile.name}</p>}
+                        </div>
+                    )}
 
                     {/* Compare Button */}
                     <button type="submit" className="compare-button">

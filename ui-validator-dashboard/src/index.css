@@ -170,6 +170,9 @@ code {
 .selection-container {
   text-align: center;
   margin-bottom: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 3rem;
 }
 
 /* Selection Title */
@@ -197,7 +200,7 @@ code {
   border-radius: 8px;
   cursor: pointer;
   width: 220px;
-  height: 150px;
+  height: 120px;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -239,6 +242,15 @@ code {
     font-size: 16px;
     padding: 10px;
   }
+
+  .selection-container p {
+    font-size: 14px;
+  }
+
+  .option-button {
+    width: 170px;
+    height: 100px;
+  }
 }
 
 /* Mobile Devices (max-width: 480px) */
@@ -265,4 +277,9 @@ code {
     padding: 10px;
   }
 
+  .option-button {
+    width: 130px;
+    height: 70px;
+    font-size: 10px;
+  }
 }
