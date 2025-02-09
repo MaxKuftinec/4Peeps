@@ -34,6 +34,7 @@ async def compare_ui(figma_file: UploadFile = File(...), ui_file: UploadFile = F
 
     return {
         "status": "success",
+        "original_report": report,
         "report": ai_generated_report,
         "marked_image": marked_img_base64
     }
@@ -41,3 +42,4 @@ async def compare_ui(figma_file: UploadFile = File(...), ui_file: UploadFile = F
 @app.get('/testapi/')
 async def testapi():
     return JSONResponse(status_code=200, content={"message": "New update with openaiAPI4"})
+

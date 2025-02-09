@@ -12,7 +12,7 @@ const UploadForm = () => {
     const [matchPercentage, setMatchPercentage] = useState(null);
     const [loading, setLoading] = useState(false); // <-- Add this line
     const [markedImage, setMarkedImage] = useState(null);
-    // const [description, setDescription] = useState("");
+    const [comparisonReport, setComparisonReport] = useState("");
 
     const resetForm = () => {
         setFigmaOption(null);
@@ -45,7 +45,10 @@ const UploadForm = () => {
                 headers: { "Content-Type": "multipart/form-data" }
             });
 
-            console.log("Comparison Report:", response.data.report);
+            console.log("Full Backend Responsessss:", response.data.original_report);
+            console.log("Comparison Report (Raw):", response.data.report);
+
+            // Store images
             const images = [];
             if (figmaFile) images.push(URL.createObjectURL(figmaFile));
             if (websiteFile) images.push(URL.createObjectURL(websiteFile));
@@ -53,32 +56,42 @@ const UploadForm = () => {
 
             setMarkedImage(images);
 
-            if (response.data.report.match_percentage !== undefined) {
-                setMatchPercentage(response.data.report.match_percentage);
-            }
+            let parsedReport = "";
+            let matchPercentage = null;
 
-            const report = JSON.parse(response.data.report);
-            console.log("Parsed Report:", report);
+            try {
+                let report = response.data.original_report;
+                let match = response.data.report;
 
-            if (report && Array.isArray(report.differences)) {
-                const differences = report.differences;
-                const alignmentIssue = differences.find(diff => diff.issue === "Misalignment detected");
-
-                if (alignmentIssue && typeof alignmentIssue.similarity_score === "number") {
-                    setMatchPercentage((alignmentIssue.similarity_score * 100));
-                } else {
-                    setMatchPercentage(null);
+                // ✅ Check if response is already a string (plain text)
+                if (typeof report === "string" && report.startsWith("{")) {
+                    report = JSON.parse(report); // Parse only if it's valid JSON
                 }
 
-                // Extract all descriptions
+                console.log("Parsed Reportssss:", match);
 
-                // const extractedDescriptions = differences.map(diff => diff.description).filter(desc => desc);
-                // setDescription(extractedDescriptions);
-            } else {
-                console.error("Unexpected API response format:", response.data);
-                setMatchPercentage(null);
-                // setDescription([]);
+                if (report && typeof report === "object" && Array.isArray(report.differences)) {
+                    const differences = report.differences;
+                    const alignmentIssue = differences.find(diff => diff.issue === "Misalignment detected");
+
+                    if (alignmentIssue && typeof alignmentIssue.similarity_score === "number") {
+                        matchPercentage = alignmentIssue.similarity_score * 100;
+                    }
+
+                    parsedReport = differences.map(diff => `• ${diff.issue}: ${diff.description}`).join("\n");
+                    // ✅ If the report is plain text, use it directly
+                    parsedReport = match;
+
+                } else {
+                    parsedReport = "No significant differences detected.";
+                }
+            } catch (error) {
+                parsedReport = "Error parsing report. Check backend response.";
+                console.error("JSON Parsing Error:", error);
             }
+
+            setMatchPercentage(matchPercentage);
+            setComparisonReport(parsedReport);
         } catch (error) {
             console.error("Error comparing UI:", error);
             alert("Failed to compare UI. Check backend logs.");
@@ -240,6 +253,11 @@ const UploadForm = () => {
                         <div className="comparison-single">
                             <h4>Comparison Result</h4>
                             <img src={markedImage[2]} alt="Comparison Result" />
+                        </div>
+                        {/* Display Report Below the Images */}
+                        <div className="report-container">
+                            <h4>Detailed Report</h4>
+                            <p className="report-text">{comparisonReport}</p>
                         </div>
                     </div>
                 )}
